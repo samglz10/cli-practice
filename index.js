@@ -1,12 +1,13 @@
 const fs = require('node:fs/promises');
-const url = `https://api.pexels.com/v1/search`;
-const searchQuery = `${process.argv[2]}`;
+const url = `https://api.nasa.gov/planetary/apod`;
+const date = `${process.argv[2]}`;
+const API_KEY = 
 const total_results = 2;
 
  async function getPhotos(url){
     const params = new URLSearchParams({
-        searchQuery, 
-        total_results,
+        date,
+        
     })
     const response = await fetch(`${url}?${params}`)
     const result = await response.json();
