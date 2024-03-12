@@ -10,12 +10,11 @@ const params = new URLSearchParams({
    // date,
    q: querySearch,
    page_size: pageSize,
+   media_type:'image',
 })
 
 
 // Photo Search
-
-
 async function NASAPhotoAndImageLibrary(url){
    if(params === undefined || !isNaN(params.page_size) ){
         console.log('error')
@@ -26,13 +25,21 @@ async function NASAPhotoAndImageLibrary(url){
         const response = await fetch(`${url}?${params}`)
         console.log(response.url)
         const result = await response.json();
-        const searchResulst = result.collection.items;
-        console.log(searchResulst)
-        const 
+        const searchResults = result.collection.items;
+        console.log(searchResults)
+        console.log(searchResults);
+        for(const item of searchResults){
+            console.log(item);
+            const image = item.links[0].href
+            console.log(image);
+        }
+
+
         } 
         catch {
-            throw new Error('Once you entered the search enter a limit');
+            throw new Error('Whoops something broke');
         }
     }
 }
 NASAPhotoAndImageLibrary(searchURL);
+
