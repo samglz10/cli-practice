@@ -1,4 +1,5 @@
 const fs = require('node:fs/promises');
+const path = require('node:path');
 require('dotenv').config();
 
 // const url = 'https://api.nasa.gov/planetary/apod';
@@ -17,24 +18,25 @@ const params = new URLSearchParams({
 // Photo Search
 async function NASAPhotoAndImageLibrary(url) {
   if (params === undefined || !isNaN(params.page_size)) {
-    console.log('error');
     return console.log(new Error('Please specify a search term'));
   }
-  try {
-    const response = await fetch(`${url}?${params}`);
-    console.log(response.url);
-    const result = await response.json();
-    const searchResults = result.collection.items;
-    //console.log(searchResults);
-    for (const item of searchResults) {
-      console.log(item);
-      const  title  = item.data[0];
-      const image = item.links[0].href;
-      console.log(image);
-      //const path = path.join(__dirname, `${title}.jpg`);
-    }
-  } catch {
-    throw new Error('Whoops something broke');
+
+  const response = await fetch(`${url}?${params}`);
+  //  console.log(response.url);
+  const result = await response.json();
+  const searchResults = result.collection.items;
+  // console.log(typeof searchResults);
+  // console.log(searchResults);
+  for (const item of searchResults) {
+    console.log(item);
+    const title = item.data[0];
+    const image = item.links[0].href;
+    // stringify the JSON object
+    const rawImage = JSON.stringify(image);
+    //set the path to be in the same project folder
+    const filePath = path.join(__dirname, `${title}.jpg`);
+    //write the file
+    fs.writeFile(filePath, rawImage, { encoding: 'utf-8' });
   }
 }
 NASAPhotoAndImageLibrary(searchURL);
