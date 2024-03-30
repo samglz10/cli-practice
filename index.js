@@ -29,14 +29,17 @@ async function NASAPhotoAndImageLibrary(url) {
   // console.log(searchResults);
   for (const item of searchResults) {
     console.log(item);
-    const title = item.data[0];
-    const image = item.links[0].href;
+    const title = item.data[0].title;
+    const imageLink = item.links[0].href;
+    const imageResponse = await fetch(imageLink,{method: "GET"});
+    const imageResult = await imageResponse.arrayBuffer()
     // stringify the JSON object
-    const rawImage = JSON.stringify(image);
+    const image = new DataView(imageResult);
+    //const rawImage = JSON.stringify(image);
     //set the path to be in the same project folder
     const filePath = path.join(__dirname, `${title}.jpg`);
     //write the file
-    fs.writeFile(filePath, rawImage, { encoding: 'utf-8' });
+    fs.writeFile(filePath, image, { encoding: 'utf-8' });
   }
 }
 NASAPhotoAndImageLibrary(searchURL);
